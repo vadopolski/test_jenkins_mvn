@@ -1,0 +1,36 @@
+curl -i -X PUT "http://namenode:9870/webhdfs/v1/testJenkins?op=CREATE"
+
+
+http://datanode:9864/webhdfs/v1/%3CPATH%3E?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=false
+
+
+curl -i -X PUT -T run.sh "http://datanode:9864/webhdfs/v1/%3CPATH%3E?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=false"
+
+
+
+curl -i -X PUT -T run.sh "http://0a2a4b93a113:9864/webhdfs/v1/testJenkins?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=false"
+
+
+
+
+curl -i -X PUT "http://namenode:9870/webhdfs/v1/testJenkins2/run.sh?op=CREATE&overwrite=true"
+
+
+curl -i -X PUT -T run.sh "http://datanode:9864/webhdfs/v1/testJenkins2/run.sh?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=true"
+
+
+
+
+
+curl -i -X PUT "http://namenode:9870/webhdfs/v1/deployed/test_jenkins_mvn-1.0-SNAPSHOT.jar?op=CREATE&overwrite=true"
+
+curl -i -X PUT -T test_jenkins_mvn-1.0-SNAPSHOT.jar "http://datanode:9864/webhdfs/v1/deployed/test_jenkins_mvn-1.0-SNAPSHOT.jar?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=true"
+
+
+http://localhost:8080/
+
+http://localhost:9870/
+
+https://registry.hub.docker.com/r/mdouchement/hdfs
+
+

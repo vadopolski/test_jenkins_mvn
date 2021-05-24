@@ -1,6 +1,6 @@
 object Print extends App {
 
-
-  println("Test")
-
+  def printIf: Unit = {
+    println("Test")
+  }
 }
