@@ -64,8 +64,6 @@ pipeline {
                     stages {
 
                         stage('build batching') {
-                            sleep 10
-
                             steps {
                                 git 'https://github.com/vadopolski/batching.git'
 
@@ -76,8 +74,6 @@ pipeline {
                         }
 
                         stage('deploy batching') {
-                            sleep 10
-
                             steps {
                                 sh """cd target
                                   curl -i -X PUT "http://namenode:9870/webhdfs/v1/batch_${params.BRANCH}/batching-1.0-SNAPSHOT.jar?op=CREATE&overwrite=true"
