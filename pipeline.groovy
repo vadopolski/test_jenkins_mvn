@@ -28,7 +28,7 @@ pipeline {
             }
         }
 
-        stage('parallel-build-and-deploy-projects') {
+        stage('build deploy target') {
             parallel {
                 stage('streaming') {
                     stages {
@@ -64,6 +64,8 @@ pipeline {
                     stages {
 
                         stage('build batching') {
+                            sleep 10
+
                             steps {
                                 git 'https://github.com/vadopolski/batching.git'
 
@@ -74,14 +76,45 @@ pipeline {
                         }
 
                         stage('deploy batching') {
+                            sleep 10
+
                             steps {
                                 sh """cd target
-                              curl -i -X PUT "http://namenode:9870/webhdfs/v1/batch_${params.BRANCH}/batching-1.0-SNAPSHOT.jar?op=CREATE&overwrite=true"
-                              curl -i -X PUT -T test_jenkins_mvn-1.0-SNAPSHOT.jar "http://datanode:9864/webhdfs/v1/batch_${params.BRANCH}/batching-1.0-SNAPSHOT.jar?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=true"
+                                  curl -i -X PUT "http://namenode:9870/webhdfs/v1/batch_${params.BRANCH}/batching-1.0-SNAPSHOT.jar?op=CREATE&overwrite=true"
+                                  curl -i -X PUT -T test_jenkins_mvn-1.0-SNAPSHOT.jar "http://datanode:9864/webhdfs/v1/batch_${params.BRANCH}/batching-1.0-SNAPSHOT.jar?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=true"
                                    """
                             }
                         }
 
+                    }
+                }
+
+                stage('rest') {
+                    stages {
+
+                        stage('update DB') {
+                            steps {
+                                echo 'Starting cassandra loader'
+                            }
+                        }
+
+                        stage('build Rest') {
+                            steps {
+                                echo 'cloned and built dao'
+                            }
+                        }
+
+                        stage('deploy Rest into Tomcat') {
+                            steps {
+                                echo 'test dao'
+                            }
+                        }
+
+                        stage('start Jmeter') {
+                            steps {
+                                echo '.... JMeter Test OK'
+                            }
+                        }
                     }
                 }
             }
