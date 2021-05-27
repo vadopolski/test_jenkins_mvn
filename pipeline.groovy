@@ -37,9 +37,6 @@ pipeline {
         stage('parallel-build-and-deploy-projects') {
             parallel {
                 stage('streaming') {
-                    agent {
-                        label "stream"
-                    }
                     stages {
 
                         stage('build streaming') {
