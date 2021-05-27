@@ -36,20 +36,29 @@ pipeline {
 
         stage('parallel-build-and-deploy-projects') {
             parallel {
-                stage('build and deploy streaming') {
-                    steps {
-                        git 'https://github.com/vadopolski/common-libs.git'
+                stage('streaming') {
+                    stages {
 
-                        sh "git checkout ${params.BRANCH}"
+                        stage('build streaming') {
+                            steps {
+                                git 'https://github.com/vadopolski/common-libs.git'
 
-                        sh "mvn clean package"
+                                sh "git checkout ${params.BRANCH}"
 
-                        sh """cd target
-                      curl -i -X PUT "http://namenode:9870/webhdfs/v1/streaming_${params.BRANCH}/common-libs-1.0-SNAPSHOT.jar?op=CREATE&overwrite=true"
-                      curl -i -X PUT -T test_jenkins_mvn-1.0-SNAPSHOT.jar "http://datanode:9864/webhdfs/v1/streaming_${params.BRANCH}/common-libs-1.0-SNAPSHOT.jar?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=true"
-                """
+                                sh "mvn clean package"
+
+                            }
+                        }
+
+                        stage('deploy streaming') {
+                            steps {
+                                sh """cd target
+                                      curl -i -X PUT "http://namenode:9870/webhdfs/v1/streaming_${params.BRANCH}/common-libs-1.0-SNAPSHOT.jar?op=CREATE&overwrite=true"
+                                      curl -i -X PUT -T test_jenkins_mvn-1.0-SNAPSHOT.jar "http://datanode:9864/webhdfs/v1/streaming_${params.BRANCH}/common-libs-1.0-SNAPSHOT.jar?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=true"
+                                   """
+                            }
+                        }
                     }
-
                 }
 
                 stage('build and deploy batch') {
