@@ -11,7 +11,7 @@ pipeline {
 
     stages {
 
-        stage('Build') {
+        stage('Build common libs') {
             steps {
                 git 'https://github.com/vadopolski/test_jenkins_mvn.git'
 
@@ -22,14 +22,13 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test common libs') {
             steps {
-                sh "mvn test compile"
-
                 script {
                     project_version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
                     echo project_version
 
+                    sh "mvn test compile"
                 }
             }
         }
@@ -61,23 +60,25 @@ pipeline {
                     }
                 }
 
-                stage('build and deploy batch') {
-                    steps {
-                        git 'https://github.com/vadopolski/batching.git'
+                stage('batch') {
+                    stages {
+                        stage('build batching') {
+                            git 'https://github.com/vadopolski/batching.git'
 
-                        sh "git checkout ${params.BRANCH}"
+                            sh "git checkout ${params.BRANCH}"
 
-                        sh "mvn clean package"
+                            sh "mvn clean package"
+                        }
 
-                        sh """cd target
+                        stage('deploy batching') {
+                            sh """cd target
                               curl -i -X PUT "http://namenode:9870/webhdfs/v1/batch_${params.BRANCH}/batching-1.0-SNAPSHOT.jar?op=CREATE&overwrite=true"
                               curl -i -X PUT -T test_jenkins_mvn-1.0-SNAPSHOT.jar "http://datanode:9864/webhdfs/v1/batch_${params.BRANCH}/batching-1.0-SNAPSHOT.jar?op=CREATE&namenoderpcaddress=namenode:9000&createflag=&createparent=true&overwrite=true"
                            """
+                        }
+
                     }
-
                 }
-
-
             }
         }
     }
