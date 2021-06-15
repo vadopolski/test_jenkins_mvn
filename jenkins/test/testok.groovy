@@ -11,7 +11,7 @@ pipeline {
         stage("SonarQube analyses") {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh "./gradlew sonarqube -Dsonar.login=c750434e7764c7e2ce18e66cb673f77ce212e644"
+                    sh "./gradlew sonarqube -Dsonar.login=8cae112e16a890fe03410604aa2a1ef724d1ead3"
                 }
             }
         }
