@@ -1,0 +1,16 @@
+version: "3"
+services:
+  sonarqube:
+    image: sonarqube:lts
+    ports:
+      - 9000:9000
+    networks:
+      - mynetwork
+  jenkins:
+    image: jenkins/jenkins:2.249.2-jdk11
+    ports:
+      - 8080:8080
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
