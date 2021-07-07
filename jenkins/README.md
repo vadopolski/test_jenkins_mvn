@@ -13,6 +13,29 @@ passw: bitnami
 
 2) HDFS -> Utilities -> Browse Directory
 http://localhost:9870/
-
-
+   
 https://registry.hub.docker.com/r/mdouchement/hdfs
+
+
+# Sonar
+1) Добавляем webhook, логинимся, меняем пароль логин на user
+
+2) Добавляем webHook Sonar -> Configuration -> Webhooks
+   http://jenkins:8080/sonarqube-webhook/
+
+3) Создаем токен в Сонаре - Security -> Users -> Tokens -> Generate
+добавляем в строчку
+   sh "./gradlew sonarqube -Dsonar.login=c750434e7764c7e2ce18e66cb673f77ce212e644"
+   
+4) Разрешаем пермишны вс в  Security -> Users -> Global Permission
+
+5) Создаем quality gate rule - 
+
+
+1) Сетапим плагин Jenkins SonarQube Scanner и Sonar Quality Gates
+
+
+2) Конфигурим Сонар в настройках, создаем креденшл с секретным словом
+и урлом - http://sonarqube:9000/
+
+3) Устанавливаем Сонар в конфигурации
